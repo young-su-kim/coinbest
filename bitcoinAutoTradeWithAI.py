@@ -9,13 +9,13 @@ secret = ""
 
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
-    df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
+    df = pyupbit.get_ohlcv(ticker, interval="day", count=30)
     target_price = df.iloc[0]['close'] + (df.iloc[0]['high'] - df.iloc[0]['low']) * k
     return target_price
 
 def get_start_time(ticker):
     """시작 시간 조회"""
-    df = pyupbit.get_ohlcv(ticker, interval="day", count=1)
+    df = pyupbit.get_ohlcv(ticker, interval="day", count=30)
     start_time = df.index[0]
     return start_time
 
@@ -38,7 +38,7 @@ predicted_close_price = 0
 def predict_price(ticker):
     """Prophet으로 당일 종가 가격 예측"""
     global predicted_close_price
-    df = pyupbit.get_ohlcv(ticker, interval="minute60")
+    df = pyupbit.get_ohlcv(ticker, interval="minute60", count=600, period=1)
     df = df.reset_index()
     df['ds'] = df['index']
     df['y'] = df['close']
